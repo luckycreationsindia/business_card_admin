@@ -4,6 +4,7 @@ import 'package:business_card_admin/src/screens/list_customer.dart';
 import 'package:business_card_admin/src/screens/login.dart';
 import 'package:business_card_admin/src/screens/update_customer.dart';
 import 'package:business_card_admin/src/widgets/main_wrapper.dart';
+import 'package:business_card_admin/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -62,4 +63,11 @@ final routerList = GoRouter(
       },
     ),
   ],
+  redirect: (BuildContext context, GoRouterState state) {
+    if (Consts.USER_DATA != null) {
+      return state.path;
+    } else {
+      return "/";
+    }
+  },
 );
