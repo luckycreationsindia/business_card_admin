@@ -15,10 +15,29 @@ class MainWrapper extends StatefulWidget {
 class _MainWrapperState extends State<MainWrapper> {
   @override
   Widget build(BuildContext context) {
+    bool showDrawer = MediaQuery.of(context).size.width < 1000;
+
     return Scaffold(
+      drawer:
+          showDrawer ? CustomDrawer(selectedIndex: widget.selectedIndex) : null,
+      appBar: showDrawer
+          ? AppBar(
+              backgroundColor: const Color(0xFF151928),
+              elevation: 0,
+              title: const Text("Digital Business Card - Admin Panel"),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Image.asset("assets/images/logo.png"),
+                )
+              ],
+            )
+          : null,
       body: Row(
         children: [
-          CustomDrawer(selectedIndex: widget.selectedIndex),
+          showDrawer
+              ? const SizedBox()
+              : CustomDrawer(selectedIndex: widget.selectedIndex),
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(20),

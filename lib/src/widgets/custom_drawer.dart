@@ -23,7 +23,7 @@ class CustomDrawer extends StatelessWidget {
               children: [
                 Image.asset("assets/images/logo.png", height: 100),
                 const Spacer(),
-                const Text('Digital Business Card - Admin'),
+                const Text('Digital Business Card - Admin Panel'),
               ],
             ),
           ),
