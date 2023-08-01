@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:business_card_admin/src/models/customer.dart';
 import 'package:business_card_admin/utils.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddCustomerScreen extends StatefulWidget {
   const AddCustomerScreen({super.key});
@@ -11,6 +16,7 @@ class AddCustomerScreen extends StatefulWidget {
 
 class _AddCustomerScreenState extends State<AddCustomerScreen> {
   bool isLoading = false;
+  XFile? selectedImage;
   final formKey = GlobalKey<FormState>();
 
   final TextEditingController _firstNameController = TextEditingController();
@@ -194,7 +200,26 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             Form(
               key: formKey,
               child: Column(
-                children: allTextInput,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      FilledButton(
+                        onPressed: () {
+                          _pickImage().then((value) {
+                            setState(() {
+                              selectedImage = value;
+                            });
+                          }).catchError((_) {});
+                        },
+                        child: const Text("Select Image"),
+                      ),
+                      selectedImage != null ? kIsWeb ? Image.network(selectedImage!.path, height: 100, width: 100,) : Image.file(File(selectedImage!.path)) : const SizedBox(),
+                    ],
+                  ),
+                  ...allTextInput,
+                ],
               ),
             ),
             const SizedBox(height: 20),
@@ -202,8 +227,9 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                 ? const CircularProgressIndicator()
                 : FilledButton(
                     onPressed: () {
-                      bool formStatus = formKey.currentState?.validate() ?? false;
-                      if(!formStatus) {
+                      bool formStatus =
+                          formKey.currentState?.validate() ?? false;
+                      if (!formStatus) {
                         return print("Form Data Missing");
                       }
                       formKey.currentState?.deactivate();
@@ -213,7 +239,9 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                           setState(() {
                             isLoading = false;
                           });
-                          _showDialog(title: "Success", message: "Customer Added Successfully");
+                          _showDialog(
+                              title: "Success",
+                              message: "Customer Added Successfully");
                           formKey.currentState?.reset();
                           formKey.currentState?.activate();
                         }).catchError((err) {
@@ -258,13 +286,41 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         keyboardType: keyboardType,
         controller: controller,
         validator: (value) {
-          if(required && (value == null || value.isEmpty)) {
+          if (required && (value == null || value.isEmpty)) {
             String message = "$label is required";
             return message;
           }
           return null;
         },
       ),
+    );
+  }
+
+  Future<void> _showDialog(
+      {required String title, required String message}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(message),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -299,34 +355,25 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     if (_contactController.text.isNotEmpty) {
       customer.contacts = [_contactController.text];
     }
+    if(selectedImage != null) {
+      List<int> fileBytes = (await selectedImage!.readAsBytes()).toList();
+      String uploadedPath = await uploadImage(fileBytes, selectedImage!.name);
+      customer.profile = uploadedPath;
+    }
     Customer result = await CustomerRestClient(Consts.dio).add(customer);
     return Future.value(result);
   }
 
-  Future<void> _showDialog({required String title, required String message}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(message),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Dismiss'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  Future<dynamic> uploadImage(List<int> file, String fileName) async {
+    FormData formData = FormData.fromMap({
+      "file": MultipartFile.fromBytes(file, filename:fileName),
+    });
+    var response = await Consts.dio.post("/f/upload", data: formData);
+    return response.data;
+  }
+
+  Future<XFile?> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    return await picker.pickImage(source: ImageSource.gallery);
   }
 }
