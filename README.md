@@ -1,16 +1,22 @@
-# business_card_admin
+# 🫂 🧑🏿‍🤝‍🧑🏻 Digital Business Card - Admin UI
 
-Business Card Admin
+Admin UI for Digital Business Card API (https://github.com/luckycreationsindia/digital_business_card)
 
-## Getting Started
+------
 
-This project is a starting point for a Flutter application.
+# ✨ Requirements
+- Any Operating System (ie. MacOS X, Linux, Windows)
+- Any IDE with Flutter SDK installed (ie. IntelliJ, Android Studio, VSCode etc)
+- A little knowledge of Dart and Flutter
+- Device to test (Physical or Emulator or you can test on web too🤯)
 
-A few resources to get you started if this is your first Flutter project:
+------
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+# 📲 Device Requirements
+- Android 22 and above for Android APK
+- iOS 9 or above for iPhone
+- Chrome 86 or Above for Chrome Browser
+- Windows 10 or Above for Windows Desktop App
+- MacOS 10.14 or Above for MacOS Desktop App
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+------
