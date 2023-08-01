@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 if (snapshot.hasData &&
                     snapshot.data != null &&
                     snapshot.data!) {
-                  context.go('/dashboard');
+                  Future.microtask(() => context.go('/dashboard'));
                   return const SizedBox();
                 }
                 return Column(
@@ -101,6 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 initLogin().then((value) {
                                   context.go('/dashboard');
                                 }).catchError((err) {
+                                  print(err);
                                   setState(() {
                                     isLoading = false;
                                   });
@@ -121,12 +122,16 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<bool> initLogin() async {
+    print("INIT LOGIN:");
+    print(Consts.API_ROOT);
     Login login = Login(
       email: _usernameController.text,
       password: _passwordController.text,
     );
     await UserRestClient(Consts.dio).login(login);
+    print("GOT LOGGED IN");
     Consts.USER_DATA = await UserRestClient(Consts.dio).profile();
+    print(Consts.USER_DATA);
     return Future.value(true);
   }
 

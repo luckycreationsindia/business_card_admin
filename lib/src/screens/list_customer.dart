@@ -42,29 +42,38 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             }
             index = 1;
             _customerList = snapshot.data != null ? snapshot.data! : [];
-            return DataTable(
-              dataRowColor: MaterialStateProperty.resolveWith(_getDataRowColor),
-              dividerThickness: 1,
-              showCheckboxColumn: false,
-              showBottomBorder: true,
-              columns: const [
-                DataColumn(label: Text("No")),
-                DataColumn(label: Text("Name")),
-                DataColumn(label: Text("Email")),
-                DataColumn(label: Text("Status")),
-                DataColumn(label: Text("Action")),
-              ],
-              rows: _customerList
-                  .map<DataRow>(
-                    (e) => _getRow(
-                  index++,
-                  e.id ?? "",
-                  e.displayName,
-                  e.status,
-                  e.email != null ? e.email! : "",
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  dataRowColor:
+                      MaterialStateProperty.resolveWith(_getDataRowColor),
+                  dividerThickness: 1,
+                  showCheckboxColumn: false,
+                  showBottomBorder: true,
+                  columns: const [
+                    DataColumn(label: Text("No")),
+                    DataColumn(label: Text("Name")),
+                    DataColumn(label: Text("Email")),
+                    DataColumn(label: Text("Status")),
+                    DataColumn(label: Text("Action")),
+                  ],
+                  rows: _customerList
+                      .map<DataRow>(
+                        (e) => _getRow(
+                          index++,
+                          e.id ?? "",
+                          e.displayName,
+                          e.status,
+                          e.email != null ? e.email! : "",
+                        ),
+                      )
+                      .toList(),
                 ),
-              )
-                  .toList(),
+              ),
             );
           },
         ),

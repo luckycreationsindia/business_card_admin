@@ -5,7 +5,7 @@ import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
-void initDio() {
+Future<void> initDio() async {
   Dio dio;
   if(kDebugMode) {
     Consts.API_ROOT = "http://localhost:9876/api/v1/";

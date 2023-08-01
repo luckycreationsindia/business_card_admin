@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="business_card_admin"
+        android:label="Digital Business Card - Admin Panel"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
