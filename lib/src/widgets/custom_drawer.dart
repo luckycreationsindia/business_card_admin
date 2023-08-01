@@ -21,7 +21,7 @@ class CustomDrawer extends StatelessWidget {
             height: 162,
             child: Column(
               children: [
-                Image.asset("images/logo.png", height: 100),
+                Image.asset("assets/images/logo.png", height: 100),
                 const Spacer(),
                 const Text('Digital Business Card - Admin'),
               ],
