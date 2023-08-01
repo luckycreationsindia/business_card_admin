@@ -17,6 +17,9 @@ abstract class CustomerRestClient {
 
   @POST("/c/add")
   Future<Customer> add(@Body() Customer customer);
+
+  @POST("/c/update/{id}")
+  Future<Customer> update(@Path("id") String id, @Body() Customer customer);
 }
 
 @JsonSerializable()

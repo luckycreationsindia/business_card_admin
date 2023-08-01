@@ -215,7 +215,19 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                         },
                         child: const Text("Select Image"),
                       ),
-                      selectedImage != null ? kIsWeb ? Image.network(selectedImage!.path, height: 100, width: 100,) : Image.file(File(selectedImage!.path)) : const SizedBox(),
+                      selectedImage != null
+                          ? kIsWeb
+                              ? Image.network(
+                                  selectedImage!.path,
+                                  height: 100,
+                                  width: 100,
+                                )
+                              : Image.file(
+                                  File(selectedImage!.path),
+                                  height: 100,
+                                  width: 100,
+                                )
+                          : const SizedBox(),
                     ],
                   ),
                   ...allTextInput,
@@ -355,7 +367,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     if (_contactController.text.isNotEmpty) {
       customer.contacts = [_contactController.text];
     }
-    if(selectedImage != null) {
+    if (selectedImage != null) {
       List<int> fileBytes = (await selectedImage!.readAsBytes()).toList();
       String uploadedPath = await uploadImage(fileBytes, selectedImage!.name);
       customer.profile = uploadedPath;
@@ -366,7 +378,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
 
   Future<dynamic> uploadImage(List<int> file, String fileName) async {
     FormData formData = FormData.fromMap({
-      "file": MultipartFile.fromBytes(file, filename:fileName),
+      "file": MultipartFile.fromBytes(file, filename: fileName),
     });
     var response = await Consts.dio.post("/f/upload", data: formData);
     return response.data;
