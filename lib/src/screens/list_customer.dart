@@ -56,6 +56,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                   showBottomBorder: true,
                   columns: const [
                     DataColumn(label: Text("No")),
+                    DataColumn(label: Text("Image")),
                     DataColumn(label: Text("Name")),
                     DataColumn(label: Text("Email")),
                     DataColumn(label: Text("Status")),
@@ -66,6 +67,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                         (e) => _getRow(
                           index++,
                           e.id ?? "",
+                          e.profile ?? "",
                           e.displayName,
                           e.status,
                           e.email != null ? e.email! : "",
@@ -81,11 +83,12 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
     );
   }
 
-  DataRow _getRow(
-      int index, String cid, String name, bool status, String email) {
+  DataRow _getRow(int index, String cid, String image, String name, bool status,
+      String email) {
     return DataRow(
       cells: [
         DataCell(Text(index.toString())),
+        DataCell(Image.network(image, height: 30, width: 30)),
         DataCell(Text(name)),
         DataCell(Text(email)),
         DataCell(
