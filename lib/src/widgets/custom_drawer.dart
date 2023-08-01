@@ -43,7 +43,7 @@ class CustomDrawer extends StatelessWidget {
                     style: selectedIndex == 0 ? selectedTextStyle : null,
                   ),
                   selected: selectedIndex == 0,
-                  onTap: () => context.go('/'),
+                  onTap: () => context.go('/dashboard'),
                 ),
                 ListTile(
                   leading: Icon(
