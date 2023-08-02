@@ -21,4 +21,4 @@ Admin UI for Digital Business Card API (https://github.com/luckycreationsindia/d
 
 ------
 
-Create two files from sample-env to .env for debug and production.env for production environment
+Create two files from custom-env to .env for debug and production.env for production environment
