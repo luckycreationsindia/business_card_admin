@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 Future<void> initDio() async {
   Dio dio;
-  Consts.API_ROOT = Consts.env.getOrElse("API_ROOT", () => "http://localhost:9876/api/v1/");
+  Consts.API_ROOT = Consts.env["API_ROOT"] ?? "http://localhost:.env/api/v1/";
   BaseOptions options = BaseOptions(baseUrl: Consts.API_ROOT);
   dio = Dio(options);
   final cookieJar = PersistCookieJar(
