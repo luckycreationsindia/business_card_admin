@@ -3,15 +3,10 @@ import 'dart:convert';
 import 'package:business_card_admin/utils.dart';
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 Future<void> initDio() async {
   Dio dio;
-  if(kDebugMode) {
-    Consts.API_ROOT = "http://localhost:9876/api/v1/";
-  } else {
-    Consts.API_ROOT = "https://dapi.myindia.app/api/v1/";
-  }
+  Consts.API_ROOT = Consts.env.getOrElse("API_ROOT", () => "http://localhost:9876/api/v1/");
   BaseOptions options = BaseOptions(baseUrl: Consts.API_ROOT);
   DioForBrowser d = DioForBrowser(options);
   var adapter = BrowserHttpClientAdapter();

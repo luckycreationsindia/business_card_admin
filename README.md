@@ -20,3 +20,5 @@ Admin UI for Digital Business Card API (https://github.com/luckycreationsindia/d
 - MacOS 10.14 or Above for MacOS Desktop App
 
 ------
+
+Create two files from sample-env to .env for debug and production.env for production environment
