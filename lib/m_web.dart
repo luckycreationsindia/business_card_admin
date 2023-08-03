@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:business_card_admin/utils.dart';
+import 'package:business_card_admin/consts.dart';
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
 

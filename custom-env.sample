@@ -1,1 +1,2 @@
 API_ROOT="http://localhost:9876/api/v1/"
+WEB_ROOT="http://localhost/"

@@ -1,5 +1,5 @@
 import 'package:business_card_admin/src/models/user.dart';
-import 'package:business_card_admin/utils.dart';
+import 'package:business_card_admin/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

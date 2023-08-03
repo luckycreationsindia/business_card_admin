@@ -18,6 +18,10 @@ dependencies:
   path_provider: ^2.0.15
   image_picker: ^1.0.1
   flutter_dotenv: ^5.1.0
+  flutter_nfc_kit: ^3.3.1
+  ndef: ^0.3.1
+  url_launcher: ^6.1.12
+  fluttertoast: ^8.2.2
 
 dev_dependencies:
   build_runner:

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:business_card_admin/src/models/customer.dart';
-import 'package:business_card_admin/utils.dart';
+import 'package:business_card_admin/consts.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

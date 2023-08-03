@@ -1,7 +1,11 @@
+import 'package:business_card_admin/consts.dart';
 import 'package:business_card_admin/src/models/customer.dart';
 import 'package:business_card_admin/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomerListScreen extends StatefulWidget {
   const CustomerListScreen({super.key});
@@ -22,6 +26,15 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<DataColumn> listOfColumns = const [
+      DataColumn(label: Text("No")),
+      DataColumn(label: Text("Image")),
+      DataColumn(label: Text("Name")),
+      DataColumn(label: Text("Email")),
+      DataColumn(label: Text("Status")),
+      DataColumn(label: Text("Action")),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -54,14 +67,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                   dividerThickness: 1,
                   showCheckboxColumn: false,
                   showBottomBorder: true,
-                  columns: const [
-                    DataColumn(label: Text("No")),
-                    DataColumn(label: Text("Image")),
-                    DataColumn(label: Text("Name")),
-                    DataColumn(label: Text("Email")),
-                    DataColumn(label: Text("Status")),
-                    DataColumn(label: Text("Action")),
-                  ],
+                  columns: listOfColumns,
                   rows: _customerList
                       .map<DataRow>(
                         (e) => _getRow(
@@ -85,41 +91,123 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
 
   DataRow _getRow(int index, String cid, String image, String name, bool status,
       String email) {
-    return DataRow(
-      cells: [
-        DataCell(Text(index.toString())),
-        DataCell(Image.network(image, height: 30, width: 30)),
-        DataCell(Text(name)),
-        DataCell(Text(email)),
-        DataCell(
-          Center(
-            child: Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 2,
-                horizontal: 10,
-              ),
-              decoration: BoxDecoration(
-                color: status
-                    ? Colors.green.withOpacity(0.5)
-                    : Colors.red.withOpacity(0.5),
-                borderRadius: const BorderRadius.all(Radius.circular(5)),
-              ),
-              child: Text(
-                status ? 'Active' : 'Inactive',
-                style: TextStyle(
-                  color: status ? Colors.green : Colors.red,
-                ),
+    List<DataCell> listOfCells = [
+      DataCell(Text(index.toString())),
+      DataCell(Image.network(image, height: 30, width: 30)),
+      DataCell(Text(name)),
+      DataCell(Text(email)),
+      DataCell(
+        Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: 10,
+            ),
+            decoration: BoxDecoration(
+              color: status
+                  ? Colors.green.withOpacity(0.5)
+                  : Colors.red.withOpacity(0.5),
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Text(
+              status ? 'Active' : 'Inactive',
+              style: TextStyle(
+                color: status ? Colors.green : Colors.red,
               ),
             ),
           ),
         ),
-        DataCell(
-          FilledButton(
-            onPressed: () => context.go("/customer/$cid"),
-            child: const Text("Update"),
-          ),
+      ),
+    ];
+    if (kIsWeb) {
+      listOfCells.add(DataCell(
+        Row(
+          children: [
+            FilledButton(
+              onPressed: () => context.go("/customer/$cid"),
+              child: const Icon(Icons.update),
+            ),
+            FilledButton(
+              onPressed: () {
+                String url = "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
+                final Uri urlParsed = Uri.parse(url);
+                Fluttertoast.showToast(
+                    msg: "Launching Link",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    fontSize: 16.0
+                );
+                launchUrl(urlParsed, mode: LaunchMode.externalApplication);
+              },
+              child: const Icon(Icons.link),
+            ),
+          ],
         ),
-      ],
+      ));
+    } else {
+      listOfCells.add(DataCell(
+        Row(
+          children: [
+            FilledButton(
+              onPressed: () => context.go("/customer/$cid"),
+              child: const Icon(Icons.update),
+            ),
+            const SizedBox(width: 10),
+            FilledButton(
+              onPressed: () {
+                String url = "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
+                final Uri urlParsed = Uri.parse(url);
+                Fluttertoast.showToast(
+                    msg: "Launching Link",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    fontSize: 16.0
+                );
+                launchUrl(urlParsed, mode: LaunchMode.externalApplication);
+              },
+              child: const Icon(Icons.link),
+            ),
+            const SizedBox(width: 10),
+            FilledButton(
+              onPressed: () async {
+                Fluttertoast.showToast(
+                    msg: "Tap NFC Card",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    fontSize: 16.0
+                );
+                bool result = await Utils().writeToNFCTag(cid);
+                if(result) {
+                  Fluttertoast.showToast(
+                      msg: "Written to NFC Tag",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      fontSize: 16.0
+                  );
+                } else {
+                  Fluttertoast.showToast(
+                      msg: "Failed to write to NFC Tag",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0
+                  );
+                }
+              },
+              child: const Icon(Icons.nfc),
+            ),
+          ],
+        ),
+      ));
+    }
+    return DataRow(
+      cells: listOfCells,
       onSelectChanged: (isSelected) => {},
     );
   }
