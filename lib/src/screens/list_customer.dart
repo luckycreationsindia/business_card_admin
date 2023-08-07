@@ -127,6 +127,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               onPressed: () => context.go("/customer/$cid"),
               child: const Icon(Icons.update),
             ),
+            const SizedBox(width: 10),
             FilledButton(
               onPressed: () {
                 String url = "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
@@ -138,7 +139,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                     timeInSecForIosWeb: 1,
                     fontSize: 16.0
                 );
-                launchUrl(urlParsed, mode: LaunchMode.externalApplication);
+                launchUrl(urlParsed, mode: LaunchMode.platformDefault);
               },
               child: const Icon(Icons.link),
             ),
