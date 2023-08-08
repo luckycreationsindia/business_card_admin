@@ -1,5 +1,6 @@
 import 'package:business_card_admin/consts.dart';
 import 'package:business_card_admin/src/models/customer.dart';
+import 'package:business_card_admin/src/screens/preview.dart';
 import 'package:business_card_admin/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                           e.displayName,
                           e.status,
                           e.email != null ? e.email! : "",
+                          e,
                         ),
                       )
                       .toList(),
@@ -90,7 +92,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
   }
 
   DataRow _getRow(int index, String cid, String image, String name, bool status,
-      String email) {
+      String email, Customer customer) {
     List<DataCell> listOfCells = [
       DataCell(Text(index.toString())),
       DataCell(Image.network(image, height: 30, width: 30)),
@@ -130,18 +132,25 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             const SizedBox(width: 10),
             FilledButton(
               onPressed: () {
-                String url = "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
+                String url =
+                    "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
                 final Uri urlParsed = Uri.parse(url);
                 Fluttertoast.showToast(
                     msg: "Launching Link",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
-                    fontSize: 16.0
-                );
+                    fontSize: 16.0);
                 launchUrl(urlParsed, mode: LaunchMode.platformDefault);
               },
               child: const Icon(Icons.link),
+            ),
+            const SizedBox(width: 10),
+            FilledButton(
+              onPressed: () {
+                context.go("/preview", extra: customer);
+              },
+              child: const Icon(Icons.remove_red_eye),
             ),
           ],
         ),
@@ -157,18 +166,36 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             const SizedBox(width: 10),
             FilledButton(
               onPressed: () {
-                String url = "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
+                String url =
+                    "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
                 final Uri urlParsed = Uri.parse(url);
                 Fluttertoast.showToast(
                     msg: "Launching Link",
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
-                    fontSize: 16.0
-                );
+                    fontSize: 16.0);
                 launchUrl(urlParsed, mode: LaunchMode.externalApplication);
               },
               child: const Icon(Icons.link),
+            ),
+            const SizedBox(width: 10),
+            FilledButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      title: const Text("Preview"),
+                      content: PreviewPage(
+                        title: "Preview",
+                        customer: customer,
+                      ),
+                    );
+                  },
+                );
+              },
+              child: const Icon(Icons.remove_red_eye),
             ),
             const SizedBox(width: 10),
             FilledButton(
@@ -178,17 +205,15 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
-                    fontSize: 16.0
-                );
+                    fontSize: 16.0);
                 bool result = await Utils().writeToNFCTag(cid);
-                if(result) {
+                if (result) {
                   Fluttertoast.showToast(
                       msg: "Written to NFC Tag",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
-                      fontSize: 16.0
-                  );
+                      fontSize: 16.0);
                 } else {
                   Fluttertoast.showToast(
                       msg: "Failed to write to NFC Tag",
@@ -197,8 +222,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                       timeInSecForIosWeb: 1,
                       backgroundColor: Colors.red,
                       textColor: Colors.white,
-                      fontSize: 16.0
-                  );
+                      fontSize: 16.0);
                 }
               },
               child: const Icon(Icons.nfc),

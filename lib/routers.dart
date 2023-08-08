@@ -1,10 +1,12 @@
+import 'package:business_card_admin/consts.dart';
+import 'package:business_card_admin/src/models/customer.dart';
 import 'package:business_card_admin/src/screens/add_customer.dart';
 import 'package:business_card_admin/src/screens/dashboard.dart';
 import 'package:business_card_admin/src/screens/list_customer.dart';
 import 'package:business_card_admin/src/screens/login.dart';
+import 'package:business_card_admin/src/screens/preview.dart';
 import 'package:business_card_admin/src/screens/update_customer.dart';
 import 'package:business_card_admin/src/widgets/main_wrapper.dart';
-import 'package:business_card_admin/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -49,6 +51,17 @@ final routerList = GoRouter(
       path: '/list_customer',
       pageBuilder: (context, state) {
         return withCustomAnimation(state, const CustomerListScreen(), 2);
+      },
+    ),
+    GoRoute(
+      path: '/preview',
+      pageBuilder: (context, state) {
+        Customer customer = state.extra as Customer;
+        return withCustomAnimation(
+          state,
+          PreviewPage(title: "Preview", customer: customer),
+          -1,
+        );
       },
     ),
     GoRoute(

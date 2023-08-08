@@ -2,6 +2,9 @@
 class Assets {
   Assets._();
 
+  static const String businessCardAdmin = '.env';
+  static const String businessCardAdminProduction = 'production.env';
   static const String imagesLogo = 'assets/images/logo.png';
+  static const String imagesUpiPayment = 'assets/images/upi_payment.png';
 
 }
