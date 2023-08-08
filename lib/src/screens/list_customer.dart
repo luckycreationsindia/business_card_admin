@@ -27,6 +27,14 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool showDrawer = MediaQuery.of(context).size.width < 1000;
+    double? moduleWidth = MediaQuery.of(context).size.width > 850
+        ? 850
+        : MediaQuery.of(context).size.width;
+    if (showDrawer) {
+      moduleWidth = double.maxFinite;
+    }
+
     List<DataColumn> listOfColumns = const [
       DataColumn(label: Text("No")),
       DataColumn(label: Text("Image")),
@@ -79,6 +87,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                           e.status,
                           e.email != null ? e.email! : "",
                           e,
+                          moduleWidth,
                         ),
                       )
                       .toList(),
@@ -92,7 +101,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
   }
 
   DataRow _getRow(int index, String cid, String image, String name, bool status,
-      String email, Customer customer) {
+      String email, Customer customer, double? moduleWidth) {
     List<DataCell> listOfCells = [
       DataCell(Text(index.toString())),
       DataCell(Image.network(image, height: 30, width: 30)),
@@ -148,7 +157,21 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             const SizedBox(width: 10),
             FilledButton(
               onPressed: () {
-                context.go("/preview", extra: customer);
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      contentPadding: EdgeInsets.zero,
+                      content: SizedBox(
+                        width: moduleWidth,
+                        child: PreviewPage(
+                          title: "Preview",
+                          customer: customer,
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
               child: const Icon(Icons.remove_red_eye),
             ),
@@ -186,10 +209,13 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
                   context: context,
                   builder: (_) {
                     return AlertDialog(
-                      title: const Text("Preview"),
-                      content: PreviewPage(
-                        title: "Preview",
-                        customer: customer,
+                      contentPadding: EdgeInsets.zero,
+                      content: SizedBox(
+                        width: double.maxFinite,
+                        child: PreviewPage(
+                          title: "Preview",
+                          customer: customer,
+                        ),
                       ),
                     );
                   },

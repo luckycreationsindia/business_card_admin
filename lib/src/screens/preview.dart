@@ -2,6 +2,7 @@ import 'package:business_card_admin/src/models/customer.dart';
 import 'package:business_card_admin/src/widgets/BottomNavButton.dart';
 import 'package:business_card_admin/src/widgets/ContactData.dart';
 import 'package:business_card_admin/src/widgets/ModuleCard.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,11 +38,15 @@ class _PreviewPageState extends State<PreviewPage> {
       moduleWidth = MediaQuery.of(context).size.width > 450
           ? 450
           : MediaQuery.of(context).size.width;
+      if(kIsWeb) {
+        if(moduleWidth < 500) moduleWidth = 500;
+      }
     }
     Customer customer = widget.customer;
     Color mainColor = colorFromHex(customer.mainColor)!;
     final fullWidth = MediaQuery.of(context).size.width;
-    final margins = (fullWidth - moduleWidth) / 2;
+    double margins = (fullWidth - moduleWidth) / 2;
+    if(margins < 0) margins = 0;
 
     return MaterialApp(
       theme: ThemeData(
