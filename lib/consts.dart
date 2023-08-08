@@ -6,4 +6,5 @@ class Consts {
   static late Dio dio;
   static User? USER_DATA;
   static late Map<String, String> env;
+  static String DEFAULT_COLOR = "#AC1A2D";
 }
