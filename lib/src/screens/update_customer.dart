@@ -34,6 +34,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
   final TextEditingController _companyController = TextEditingController();
   final TextEditingController _jobTitleController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _gstController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
   final TextEditingController _stateController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
@@ -179,6 +180,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
     _companyController.text = oldData.company ?? '';
     _jobTitleController.text = oldData.jobTitle ?? '';
     _addressController.text = oldData.address ?? '';
+    _gstController.text = oldData.gst ?? '';
     _cityController.text = oldData.city ?? '';
     _stateController.text = oldData.state ?? '';
     _countryController.text = oldData.country ?? '';
@@ -249,6 +251,13 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
       _getTextField(
         label: "Address",
         controller: _addressController,
+        keyboardType: TextInputType.multiline,
+        lines: 3,
+      ),
+      const SizedBox(height: 20),
+      _getTextField(
+        label: "GST No.",
+        controller: _gstController,
         keyboardType: TextInputType.multiline,
         lines: 3,
       ),
@@ -427,6 +436,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
         whatsapp: _whatsAppController.text,
         email: _emailController.text,
         address: _addressController.text,
+        gst: _gstController.text,
         latitude: num.tryParse(_latitudeController.text),
         longitude: num.tryParse(_longitudeController.text),
         company: _companyController.text,

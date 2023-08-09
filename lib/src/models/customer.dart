@@ -36,6 +36,7 @@ class Customer extends ChangeNotifier {
   String? email;
   String? website;
   String? address;
+  String? gst;
   String? city;
   String? state;
   String? country;
@@ -67,6 +68,7 @@ class Customer extends ChangeNotifier {
     this.email,
     this.website,
     this.address,
+    this.gst,
     this.city,
     this.state,
     this.country,
@@ -126,6 +128,7 @@ class Customer extends ChangeNotifier {
     bankDetails = customer.bankDetails;
     about = customer.about;
     notes = customer.notes;
+    gst = customer.gst;
     notifyListeners();
   }
 
