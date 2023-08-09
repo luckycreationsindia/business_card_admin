@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:business_card_admin/consts.dart';
 import 'package:business_card_admin/src/models/customer.dart';
+import 'package:business_card_admin/src/widgets/CheckHandler.dart';
+import 'package:business_card_admin/src/widgets/CustomeThemePicker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ class AddCustomerScreen extends StatefulWidget {
 class _AddCustomerScreenState extends State<AddCustomerScreen> {
   Color currentColor = colorFromHex(Consts.DEFAULT_COLOR)!;
   bool isLoading = false;
+  bool isPrivate = false;
+  bool customerStatus = false;
   XFile? selectedImage;
   final formKey = GlobalKey<FormState>();
 
@@ -197,18 +201,25 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         lines: 3,
       ),
       const SizedBox(height: 20),
-      Row(
-        children: [
-          TextButton(
-            child: const Text("Select theme"),
-            onPressed: () => _showColorPicker(),
-          ),
-          Container(
-            height: 50,
-            width: 50,
-            color: currentColor,
-          )
-        ],
+      CheckHandler(
+          checked: isPrivate,
+          title: "Is Private",
+          callback: (value) {
+            isPrivate = value;
+          }),
+      const SizedBox(height: 20),
+      CheckHandler(
+          checked: customerStatus,
+          title: "Status",
+          callback: (value) {
+            customerStatus = value;
+          }),
+      const SizedBox(height: 20),
+      CustomerThemePicker(
+        currentColor: currentColor,
+        callback: (color) {
+          currentColor = color;
+        },
       ),
     ];
 
@@ -388,7 +399,8 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       country: _countryController.text,
       pincode: num.tryParse(_pincodeController.text),
       mainColor: "#${colorToHex(currentColor)}",
-      status: true,
+      status: customerStatus,
+      private: isPrivate,
     );
     if (_contactController.text.isNotEmpty) {
       customer.contacts = [_contactController.text];
@@ -413,32 +425,5 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   Future<XFile?> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     return await picker.pickImage(source: ImageSource.gallery);
-  }
-
-  Future<void> _showColorPicker() {
-    Color pickerColor = currentColor;
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Pick a color!'),
-          content: SingleChildScrollView(
-            child: ColorPicker(
-              pickerColor: pickerColor,
-              onColorChanged: (color) => {pickerColor = color},
-            ),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text('Done'),
-              onPressed: () {
-                setState(() => currentColor = pickerColor);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }

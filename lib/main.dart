@@ -9,7 +9,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String env = ".env";
   if(!kDebugMode) env = "production.env";
-
   await dotenv.load(fileName: env);
   Consts.env = dotenv.env;
   await dio.initDio();

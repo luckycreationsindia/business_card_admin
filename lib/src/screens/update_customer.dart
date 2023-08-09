@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:business_card_admin/consts.dart';
 import 'package:business_card_admin/src/models/customer.dart';
+import 'package:business_card_admin/src/widgets/CheckHandler.dart';
+import 'package:business_card_admin/src/widgets/CustomeThemePicker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +21,12 @@ class UpdateCustomerScreen extends StatefulWidget {
 
 class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
   Color currentColor = colorFromHex(Consts.DEFAULT_COLOR)!;
-  Color? newColor;
   bool isLoading = false;
+  bool isPrivate = false;
+  bool customerStatus = true;
   XFile? selectedImage;
   final formKey = GlobalKey<FormState>();
-  late Customer oldData;
+  Customer? oldData;
   List<Widget> allTextInput = [];
 
   final TextEditingController _firstNameController = TextEditingController();
@@ -108,9 +111,9 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
                                         height: 100,
                                         width: 100,
                                       )
-                                : oldData.profile != null
+                                : oldData!.profile != null
                                     ? Image.network(
-                                        oldData.profile!,
+                                        oldData!.profile!,
                                         height: 100,
                                         width: 100,
                                       )
@@ -170,33 +173,35 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
   }
 
   void _initOldValues() {
-    currentColor = colorFromHex(oldData.mainColor)!;
-    _firstNameController.text = oldData.first_name;
-    _lastNameController.text = oldData.last_name ?? '';
+    currentColor = colorFromHex(oldData!.mainColor)!;
+    isPrivate = oldData!.private;
+    customerStatus = oldData!.status;
+    _firstNameController.text = oldData!.first_name;
+    _lastNameController.text = oldData!.last_name ?? '';
     _contactController.text =
-        oldData.contacts != null ? oldData.contacts!.first : '';
-    _whatsAppController.text = oldData.whatsapp ?? '';
-    _emailController.text = oldData.email ?? '';
-    _companyController.text = oldData.company ?? '';
-    _jobTitleController.text = oldData.jobTitle ?? '';
-    _addressController.text = oldData.address ?? '';
-    _gstController.text = oldData.gst ?? '';
-    _cityController.text = oldData.city ?? '';
-    _stateController.text = oldData.state ?? '';
-    _countryController.text = oldData.country ?? '';
-    _pincodeController.text = oldData.pincode?.toString() ?? '';
-    _longitudeController.text = oldData.longitude?.toString() ?? '';
-    _latitudeController.text = oldData.latitude?.toString() ?? '';
-    _websiteController.text = oldData.website ?? '';
-    _facebookController.text = oldData.facebook ?? '';
-    _instagramController.text = oldData.instagram ?? '';
-    _linkedInController.text = oldData.linkedin ?? '';
-    _githubController.text = oldData.github ?? '';
-    _twitterController.text = oldData.twitter ?? '';
-    _upiController.text = oldData.upi ?? '';
-    _bankDetailsController.text = oldData.bankDetails ?? '';
-    _aboutController.text = oldData.about ?? '';
-    _notesController.text = oldData.notes ?? '';
+        oldData!.contacts != null ? oldData!.contacts!.first : '';
+    _whatsAppController.text = oldData!.whatsapp ?? '';
+    _emailController.text = oldData!.email ?? '';
+    _companyController.text = oldData!.company ?? '';
+    _jobTitleController.text = oldData!.jobTitle ?? '';
+    _addressController.text = oldData!.address ?? '';
+    _gstController.text = oldData!.gst ?? '';
+    _cityController.text = oldData!.city ?? '';
+    _stateController.text = oldData!.state ?? '';
+    _countryController.text = oldData!.country ?? '';
+    _pincodeController.text = oldData!.pincode?.toString() ?? '';
+    _longitudeController.text = oldData!.longitude?.toString() ?? '';
+    _latitudeController.text = oldData!.latitude?.toString() ?? '';
+    _websiteController.text = oldData!.website ?? '';
+    _facebookController.text = oldData!.facebook ?? '';
+    _instagramController.text = oldData!.instagram ?? '';
+    _linkedInController.text = oldData!.linkedin ?? '';
+    _githubController.text = oldData!.github ?? '';
+    _twitterController.text = oldData!.twitter ?? '';
+    _upiController.text = oldData!.upi ?? '';
+    _bankDetailsController.text = oldData!.bankDetails ?? '';
+    _aboutController.text = oldData!.about ?? '';
+    _notesController.text = oldData!.notes ?? '';
 
     allTextInput = [
       const SizedBox(height: 20),
@@ -346,18 +351,30 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
         lines: 3,
       ),
       const SizedBox(height: 20),
-      Row(
-        children: [
-          TextButton(
-            child: const Text("Select theme"),
-            onPressed: () => _showColorPicker(),
-          ),
-          Container(
-            height: 50,
-            width: 50,
-            color: newColor ?? currentColor,
-          )
-        ],
+      CheckHandler(
+        checked: isPrivate,
+        title: "Is Private",
+        callback: (value) {
+          isPrivate = value;
+          oldData!.private = value;
+        },
+      ),
+      const SizedBox(height: 20),
+      CheckHandler(
+        checked: customerStatus,
+        title: "Status",
+        callback: (value) {
+          customerStatus = value;
+          oldData!.status = value;
+        },
+      ),
+      const SizedBox(height: 20),
+      CustomerThemePicker(
+        currentColor: currentColor,
+        callback: (color) {
+          currentColor = color;
+          oldData?.mainColor = colorToHex(color);
+        },
       ),
     ];
   }
@@ -429,7 +446,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
 
   Future<Customer> _updateCustomer() async {
     Customer customer = Customer(
-        id: oldData.id,
+        id: oldData!.id,
         first_name: _firstNameController.text,
         last_name: _lastNameController.text,
         contacts: [],
@@ -454,10 +471,11 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
         city: _cityController.text,
         state: _stateController.text,
         country: _countryController.text,
-        profile: oldData.profile,
+        profile: oldData!.profile,
         pincode: num.tryParse(_pincodeController.text),
-        status: true,
-        mainColor: "#${colorToHex(newColor ?? currentColor)}");
+        status: customerStatus,
+        private: isPrivate,
+        mainColor: "#${colorToHex(currentColor)}");
     if (_contactController.text.isNotEmpty) {
       customer.contacts = [_contactController.text];
     }
@@ -485,33 +503,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
   }
 
   Future<Customer> _loadCustomer() async {
+    if (oldData != null) return Future.value(oldData);
     return await CustomerRestClient(Consts.dio).loadCustomer(widget.id);
-  }
-
-  Future<void> _showColorPicker() {
-    Color pickerColor = newColor ?? currentColor;
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Pick a color!'),
-          content: SingleChildScrollView(
-            child: ColorPicker(
-              pickerColor: pickerColor,
-              onColorChanged: (color) => {pickerColor = color},
-            ),
-          ),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text('Done'),
-              onPressed: () {
-                setState(() => newColor = pickerColor);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 }

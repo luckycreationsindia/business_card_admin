@@ -55,6 +55,7 @@ class Customer extends ChangeNotifier {
   String? about;
   String? notes;
   bool status;
+  bool private;
 
   Customer({
     this.id,
@@ -87,6 +88,7 @@ class Customer extends ChangeNotifier {
     this.about,
     this.notes,
     required this.status,
+    required this.private,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) =>
@@ -129,6 +131,7 @@ class Customer extends ChangeNotifier {
     about = customer.about;
     notes = customer.notes;
     gst = customer.gst;
+    private = customer.private;
     notifyListeners();
   }
 

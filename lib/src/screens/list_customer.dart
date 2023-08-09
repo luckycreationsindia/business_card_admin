@@ -41,6 +41,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
       DataColumn(label: Text("Name")),
       DataColumn(label: Text("Email")),
       DataColumn(label: Text("Status")),
+      DataColumn(label: Text("Privacy")),
       DataColumn(label: Text("Action")),
     ];
 
@@ -124,6 +125,28 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               status ? 'Active' : 'Inactive',
               style: TextStyle(
                 color: status ? Colors.green : Colors.red,
+              ),
+            ),
+          ),
+        ),
+      ),
+      DataCell(
+        Center(
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 2,
+              horizontal: 10,
+            ),
+            decoration: BoxDecoration(
+              color: customer.private
+                  ? Colors.red.withOpacity(0.5)
+                  : Colors.green.withOpacity(0.5),
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
+            ),
+            child: Text(
+              customer.private ? 'Private' : 'Public',
+              style: TextStyle(
+                color: customer.private ? Colors.red : Colors.green,
               ),
             ),
           ),
