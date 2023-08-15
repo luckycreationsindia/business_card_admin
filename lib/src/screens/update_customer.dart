@@ -4,10 +4,12 @@ import 'package:business_card_admin/consts.dart';
 import 'package:business_card_admin/src/models/customer.dart';
 import 'package:business_card_admin/src/widgets/CheckHandler.dart';
 import 'package:business_card_admin/src/widgets/CustomeThemePicker.dart';
+import 'package:business_card_admin/src/widgets/SectorTagsHandler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UpdateCustomerScreen extends StatefulWidget {
@@ -28,6 +30,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
   final formKey = GlobalKey<FormState>();
   Customer? oldData;
   List<Widget> allTextInput = [];
+  List<String> sectorList = [];
 
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -54,6 +57,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
   final TextEditingController _bankDetailsController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+  final TextEditingController _shortPathController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -138,14 +142,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
                             setState(() {
                               isLoading = true;
                               _updateCustomer().then((value) {
-                                setState(() {
-                                  isLoading = false;
-                                });
-                                _showDialog(
-                                    title: "Success",
-                                    message: "Customer Updated Successfully");
-                                formKey.currentState?.reset();
-                                formKey.currentState?.activate();
+                                context.pop("Customer Updated Successfully");
                               }).catchError((err) {
                                 setState(() {
                                   isLoading = false;
@@ -202,6 +199,8 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
     _bankDetailsController.text = oldData!.bankDetails ?? '';
     _aboutController.text = oldData!.about ?? '';
     _notesController.text = oldData!.notes ?? '';
+    _shortPathController.text = oldData!.shortPath ?? '';
+    sectorList = oldData!.sectors ?? [];
 
     allTextInput = [
       const SizedBox(height: 20),
@@ -263,8 +262,6 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
       _getTextField(
         label: "GST No.",
         controller: _gstController,
-        keyboardType: TextInputType.multiline,
-        lines: 3,
       ),
       const SizedBox(height: 20),
       _getTextField(
@@ -351,6 +348,18 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
         lines: 3,
       ),
       const SizedBox(height: 20),
+      _getTextField(
+        label: "Short Path",
+        controller: _shortPathController,
+      ),
+      const SizedBox(height: 20),
+      SectorTagsHandler(
+        sectorList: sectorList,
+        callback: (result) {
+          sectorList = result;
+        },
+      ),
+      const SizedBox(height: 20),
       CheckHandler(
         checked: isPrivate,
         title: "Is Private",
@@ -416,34 +425,6 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
     );
   }
 
-  Future<void> _showDialog(
-      {required String title, required String message}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(message),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Dismiss'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<Customer> _updateCustomer() async {
     Customer customer = Customer(
         id: oldData!.id,
@@ -472,6 +453,8 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
         state: _stateController.text,
         country: _countryController.text,
         profile: oldData!.profile,
+        shortPath: _shortPathController.text,
+        sectors: sectorList,
         pincode: num.tryParse(_pincodeController.text),
         status: customerStatus,
         private: isPrivate,

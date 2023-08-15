@@ -65,12 +65,9 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             }
             index = 1;
             _customerList = snapshot.data != null ? snapshot.data! : [];
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
+            return Expanded(
+              child: InteractiveViewer(
+                constrained: false,
                 child: DataTable(
                   dataRowColor:
                       MaterialStateProperty.resolveWith(_getDataRowColor),
@@ -158,7 +155,7 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         Row(
           children: [
             FilledButton(
-              onPressed: () => context.go("/customer/$cid"),
+              onPressed: () => context.push("/customer/$cid"),
               child: const Icon(Icons.update),
             ),
             const SizedBox(width: 10),
@@ -206,7 +203,11 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
         Row(
           children: [
             FilledButton(
-              onPressed: () => context.go("/customer/$cid"),
+              onPressed: () => context.push("/customer/$cid").then((value) {
+                if (value != null && value is String) {
+                  _showDialog(title: "Success", message: value.toString());
+                }
+              }),
               child: const Icon(Icons.update),
             ),
             const SizedBox(width: 10),
@@ -302,5 +303,33 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
 
   Future<List<Customer>> _loadCustomers() {
     return CustomerRestClient(Consts.dio).loadAllCustomers();
+  }
+
+  Future<void> _showDialog(
+      {required String title, required String message}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(message),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

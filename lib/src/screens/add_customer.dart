@@ -4,6 +4,7 @@ import 'package:business_card_admin/consts.dart';
 import 'package:business_card_admin/src/models/customer.dart';
 import 'package:business_card_admin/src/widgets/CheckHandler.dart';
 import 'package:business_card_admin/src/widgets/CustomeThemePicker.dart';
+import 'package:business_card_admin/src/widgets/SectorTagsHandler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   bool isPrivate = false;
   bool customerStatus = false;
   XFile? selectedImage;
+  List<String> sectorList = [];
   final formKey = GlobalKey<FormState>();
 
   final TextEditingController _firstNameController = TextEditingController();
@@ -50,6 +52,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   final TextEditingController _bankDetailsController = TextEditingController();
   final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
+  final TextEditingController _shortPathController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -113,8 +116,6 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       _getTextField(
         label: "GST No.",
         controller: _gstController,
-        keyboardType: TextInputType.multiline,
-        lines: 3,
       ),
       const SizedBox(height: 20),
       _getTextField(
@@ -199,6 +200,18 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         controller: _aboutController,
         keyboardType: TextInputType.multiline,
         lines: 3,
+      ),
+      const SizedBox(height: 20),
+      _getTextField(
+        label: "Short Path",
+        controller: _shortPathController,
+      ),
+      const SizedBox(height: 20),
+      SectorTagsHandler(
+        sectorList: sectorList,
+        callback: (result) {
+          sectorList = result;
+        },
       ),
       const SizedBox(height: 20),
       CheckHandler(
@@ -397,6 +410,8 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       city: _cityController.text,
       state: _stateController.text,
       country: _countryController.text,
+      shortPath: _shortPathController.text,
+      sectors: sectorList,
       pincode: num.tryParse(_pincodeController.text),
       mainColor: "#${colorToHex(currentColor)}",
       status: customerStatus,

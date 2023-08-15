@@ -54,6 +54,10 @@ class Customer extends ChangeNotifier {
   String? bankDetails;
   String? about;
   String? notes;
+  @JsonKey(name: 'short_path')
+  String? shortPath;
+  List<String>? sectors;
+  List<String>? tags;
   bool status;
   bool private;
 
@@ -87,6 +91,9 @@ class Customer extends ChangeNotifier {
     this.bankDetails,
     this.about,
     this.notes,
+    this.shortPath,
+    this.sectors,
+    this.tags,
     required this.status,
     required this.private,
   });
@@ -131,7 +138,11 @@ class Customer extends ChangeNotifier {
     about = customer.about;
     notes = customer.notes;
     gst = customer.gst;
+    shortPath = customer.shortPath;
+    sectors = customer.sectors;
+    tags = customer.tags;
     private = customer.private;
+    status = customer.status;
     notifyListeners();
   }
 

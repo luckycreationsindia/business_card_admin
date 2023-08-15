@@ -40,6 +40,10 @@ Customer _$CustomerFromJson(Map<String, dynamic> json) => Customer(
       bankDetails: json['bankDetails'] as String?,
       about: json['about'] as String?,
       notes: json['notes'] as String?,
+      shortPath: json['short_path'] as String?,
+      sectors:
+          (json['sectors'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
       status: json['status'] as bool,
       private: json['private'] as bool,
     );
@@ -74,6 +78,9 @@ Map<String, dynamic> _$CustomerToJson(Customer instance) => <String, dynamic>{
       'bankDetails': instance.bankDetails,
       'about': instance.about,
       'notes': instance.notes,
+      'short_path': instance.shortPath,
+      'sectors': instance.sectors,
+      'tags': instance.tags,
       'status': instance.status,
       'private': instance.private,
     };
