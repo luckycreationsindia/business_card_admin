@@ -220,6 +220,7 @@ class _SectorTagsHandlerState extends State<SectorTagsHandler> {
     "Glass, Ceramics & Concrete",
     "Government Administration",
     "Government Relations",
+    "Granites & Tools",
     "Graphic Design",
     "Health, Wellness & Fitness",
     "Higher Education",
