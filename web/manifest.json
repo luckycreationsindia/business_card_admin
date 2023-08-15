@@ -1,6 +1,6 @@
 {
-    "name": "business_card_admin",
-    "short_name": "business_card_admin",
+    "name": "Business Card Admin",
+    "short_name": "Business Card Admin",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#000000",
