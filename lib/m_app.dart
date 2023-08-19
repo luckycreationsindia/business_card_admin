@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:business_card_admin/consts.dart';
 import 'package:dio/dio.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 Future<void> initDio() async {
@@ -24,7 +24,7 @@ Future<void> initDio() async {
         try {
           data = jsonDecode(data);
         } catch (_) {}
-        print(data);
+        if (kDebugMode) print(data);
         if (data['status'] == 'Success') {
           if (data.containsKey('data')) {
             handler.next(Response(

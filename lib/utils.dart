@@ -14,7 +14,7 @@ class Utils {
     var tag = await FlutterNfcKit.poll(timeout: const Duration(seconds: 10),
         iosMultipleTagMessage: "Multiple tags found!", iosAlertMessage: "Scan your tag");
 
-    print(jsonEncode(tag));
+    if (kDebugMode) print(jsonEncode(tag));
 
     bool isWritable = tag.ndefWritable ?? false;
     if(!isWritable) return Future.value(false);
