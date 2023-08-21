@@ -290,7 +290,10 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
                       bool formStatus =
                           formKey.currentState?.validate() ?? false;
                       if (!formStatus) {
-                        return print("Form Data Missing");
+                        if (kDebugMode) {
+                          print("Form Data Missing");
+                        }
+                        return;
                       }
                       formKey.currentState?.deactivate();
                       setState(() {

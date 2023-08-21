@@ -1,5 +1,6 @@
 import 'package:business_card_admin/src/models/user.dart';
 import 'package:business_card_admin/consts.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,8 +13,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
-  final TextEditingController _usernameController = new TextEditingController();
-  final TextEditingController _passwordController = new TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 initLogin().then((value) {
                                   context.go('/dashboard');
                                 }).catchError((err) {
-                                  print(err);
+                                  if (kDebugMode) {
+                                    print(err);
+                                  }
                                   setState(() {
                                     isLoading = false;
                                   });
@@ -122,16 +125,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<bool> initLogin() async {
-    print("INIT LOGIN:");
-    print(Consts.API_ROOT);
+    if (kDebugMode) {
+      print("INIT LOGIN:");
+      print(Consts.API_ROOT);
+    }
     Login login = Login(
       email: _usernameController.text,
       password: _passwordController.text,
     );
     await UserRestClient(Consts.dio).login(login);
-    print("GOT LOGGED IN");
     Consts.USER_DATA = await UserRestClient(Consts.dio).profile();
-    print(Consts.USER_DATA);
+    if (kDebugMode) {
+      print("GOT LOGGED IN");
+      print(Consts.USER_DATA);
+    }
     return Future.value(true);
   }
 

@@ -18,10 +18,23 @@ class CustomerListScreen extends StatefulWidget {
 class _CustomerListScreenState extends State<CustomerListScreen> {
   int index = 1;
   late List<Customer> _customerList;
+  ValueNotifier<dynamic> nfcResultHandler = ValueNotifier(null);
 
   @override
   void initState() {
     index = 1;
+    nfcResultHandler.addListener(() {
+      if (kDebugMode) {
+        print(nfcResultHandler.value);
+      }
+      Fluttertoast.showToast(
+        msg: nfcResultHandler.value ?? 'NFC Message',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        fontSize: 16.0,
+      );
+    });
     super.initState();
   }
 
@@ -251,28 +264,28 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
             FilledButton(
               onPressed: () async {
                 Fluttertoast.showToast(
-                    msg: "Tap NFC Card",
+                  msg: "Tap NFC Card",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  fontSize: 16.0,
+                );
+                try {
+                  String url = "${Consts.env["WEB_ROOT"] ?? "http://localhost/"}?id=$cid";
+                  if(customer.shortPath != null && customer.shortPath!.isNotEmpty) {
+                    url = "${Consts.env["LINK_ROOT"] ?? "http://localhost/"}${customer.shortPath}";
+                  }
+                  await Utils().writeToNFCTag(url, nfcResultHandler);
+                } catch (err) {
+                  Fluttertoast.showToast(
+                    msg: err.toString(),
                     toastLength: Toast.LENGTH_SHORT,
                     gravity: ToastGravity.CENTER,
                     timeInSecForIosWeb: 1,
-                    fontSize: 16.0);
-                bool result = await Utils().writeToNFCTag(cid);
-                if (result) {
-                  Fluttertoast.showToast(
-                      msg: "Written to NFC Tag",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      fontSize: 16.0);
-                } else {
-                  Fluttertoast.showToast(
-                      msg: "Failed to write to NFC Tag",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.red,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
                 }
               },
               child: const Icon(Icons.nfc),

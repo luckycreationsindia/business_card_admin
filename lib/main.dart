@@ -8,7 +8,7 @@ import 'm_app.dart' if(dart.library.html) 'm_web.dart' as dio;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String env = ".env";
-  if(!kDebugMode) env = "production.env";
+  if(!kDebugMode || !kIsWeb) env = "production.env";
   await dotenv.load(fileName: env);
   Consts.env = dotenv.env;
   await dio.initDio();
