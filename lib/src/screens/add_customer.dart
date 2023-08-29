@@ -53,6 +53,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
   final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   final TextEditingController _shortPathController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +89,13 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         label: "Email",
         controller: _emailController,
         keyboardType: TextInputType.emailAddress,
+      ),
+      const SizedBox(height: 20),
+      _getTextField(
+        label: "Password",
+        controller: _passwordController,
+        obscureText: true,
+        lines: 1,
       ),
       const SizedBox(height: 20),
       _getTextField(
@@ -329,6 +337,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     int? lines,
     TextInputType keyboardType = TextInputType.text,
     bool required = false,
+    bool obscureText = false,
   }) {
     hint ??= label;
     return SizedBox(
@@ -347,6 +356,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
         minLines: lines,
         maxLines: lines,
         keyboardType: keyboardType,
+        obscureText: obscureText,
         controller: controller,
         validator: (value) {
           if (required && (value == null || value.isEmpty)) {
@@ -419,6 +429,7 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
       mainColor: "#${colorToHex(currentColor)}",
       status: customerStatus,
       private: isPrivate,
+      password: _passwordController.text,
     );
     if (_contactController.text.isNotEmpty) {
       customer.contacts = [_contactController.text];

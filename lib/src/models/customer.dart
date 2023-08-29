@@ -28,6 +28,7 @@ class Customer extends ChangeNotifier {
   String? id;
   String first_name;
   String? last_name;
+  String? password;
   String? company;
   String? jobTitle;
   String? profile;
@@ -65,6 +66,7 @@ class Customer extends ChangeNotifier {
     this.id,
     required this.first_name,
     this.last_name,
+    this.password,
     this.company,
     this.jobTitle,
     this.profile,
@@ -116,6 +118,7 @@ class Customer extends ChangeNotifier {
   void update(Customer customer) {
     first_name = customer.first_name;
     last_name = customer.last_name;
+    password = customer.password;
     company = customer.company;
     jobTitle = customer.jobTitle;
     profile = customer.profile;

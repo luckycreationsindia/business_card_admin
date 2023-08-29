@@ -58,6 +58,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
   final TextEditingController _aboutController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
   final TextEditingController _shortPathController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -240,6 +241,13 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
       ),
       const SizedBox(height: 20),
       _getTextField(
+        label: "Password",
+        controller: _passwordController,
+        obscureText: true,
+        lines: 1,
+      ),
+      const SizedBox(height: 20),
+      _getTextField(
         label: "Company",
         controller: _companyController,
       ),
@@ -398,6 +406,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
     int? lines,
     TextInputType keyboardType = TextInputType.text,
     bool required = false,
+    bool obscureText = false,
   }) {
     hint ??= label;
     return SizedBox(
@@ -416,6 +425,7 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
         minLines: lines,
         maxLines: lines,
         keyboardType: keyboardType,
+        obscureText: obscureText,
         controller: controller,
         validator: (value) {
           if (required && (value == null || value.isEmpty)) {
@@ -430,38 +440,40 @@ class _UpdateCustomerScreenState extends State<UpdateCustomerScreen> {
 
   Future<Customer> _updateCustomer() async {
     Customer customer = Customer(
-        id: oldData!.id,
-        first_name: _firstNameController.text,
-        last_name: _lastNameController.text,
-        contacts: [],
-        whatsapp: _whatsAppController.text,
-        email: _emailController.text,
-        address: _addressController.text,
-        gst: _gstController.text,
-        latitude: num.tryParse(_latitudeController.text),
-        longitude: num.tryParse(_longitudeController.text),
-        company: _companyController.text,
-        jobTitle: _jobTitleController.text,
-        upi: _upiController.text,
-        about: _aboutController.text,
-        bankDetails: _bankDetailsController.text,
-        facebook: _facebookController.text,
-        github: _githubController.text,
-        instagram: _instagramController.text,
-        linkedin: _linkedInController.text,
-        notes: _notesController.text,
-        twitter: _twitterController.text,
-        website: _websiteController.text,
-        city: _cityController.text,
-        state: _stateController.text,
-        country: _countryController.text,
-        profile: oldData!.profile,
-        shortPath: _shortPathController.text,
-        sectors: sectorList,
-        pincode: num.tryParse(_pincodeController.text),
-        status: customerStatus,
-        private: isPrivate,
-        mainColor: "#${colorToHex(currentColor)}");
+      id: oldData!.id,
+      first_name: _firstNameController.text,
+      last_name: _lastNameController.text,
+      contacts: [],
+      whatsapp: _whatsAppController.text,
+      email: _emailController.text,
+      address: _addressController.text,
+      gst: _gstController.text,
+      latitude: num.tryParse(_latitudeController.text),
+      longitude: num.tryParse(_longitudeController.text),
+      company: _companyController.text,
+      jobTitle: _jobTitleController.text,
+      upi: _upiController.text,
+      about: _aboutController.text,
+      bankDetails: _bankDetailsController.text,
+      facebook: _facebookController.text,
+      github: _githubController.text,
+      instagram: _instagramController.text,
+      linkedin: _linkedInController.text,
+      notes: _notesController.text,
+      twitter: _twitterController.text,
+      website: _websiteController.text,
+      city: _cityController.text,
+      state: _stateController.text,
+      country: _countryController.text,
+      profile: oldData!.profile,
+      shortPath: _shortPathController.text,
+      sectors: sectorList,
+      pincode: num.tryParse(_pincodeController.text),
+      status: customerStatus,
+      private: isPrivate,
+      mainColor: "#${colorToHex(currentColor)}",
+      password: _passwordController.text,
+    );
     if (_contactController.text.isNotEmpty) {
       customer.contacts = [_contactController.text];
     }
