@@ -47,5 +47,28 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>To select Customer's Image from Gallery</string>
+	<key>NSCameraUsageDescription</key>
+	<string>To click photo of Customer if not present in Gallery</string>
+	<key>NFCReaderUsageDescription</key>
+	<string>This feature will be used to write url to NFC Tag for Customer</string>
+	<key>com.apple.developer.nfc.readersession.formats</key>
+	<array>
+        <string>NDEF</string>
+        <string>TAG</string>
+    </array>
+	<key>com.apple.developer.nfc.readersession.felica.systemcodes</key>
+    <array>
+        <string>0000</string>
+        <string>12FC</string>
+        <string>0003</string>
+        <string>FE00</string>
+    </array>
+    <key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+    <array>
+        <string>0000</string>
+        <string>D2760000850101</string>
+    </array>
 </dict>
 </plist>
